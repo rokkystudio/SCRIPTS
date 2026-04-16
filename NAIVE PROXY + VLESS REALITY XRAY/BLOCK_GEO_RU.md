@@ -1,4 +1,4 @@
-# README
+# BLOCK_GEO_RU
 
 ## Текущее состояние
 
@@ -27,10 +27,10 @@
 Текущие правила:
 
 ```nft
-meta skuid 996 ip daddr @ru4 ct state new reject with icmpx admin-prohibited
-meta skuid 996 ip6 daddr @ru6 ct state new reject with icmpx admin-prohibited
-meta skuid 999 ip daddr @ru4 ct state new reject with icmpx admin-prohibited
-meta skuid 999 ip6 daddr @ru6 ct state new reject with icmpx admin-prohibited
+meta skuid 996 ct direction original ip daddr @ru4 ct state new reject with icmpx admin-prohibited
+meta skuid 996 ct direction original ip6 daddr @ru6 ct state new reject with icmpx admin-prohibited
+meta skuid 999 ct direction original ip daddr @ru4 ct state new reject with icmpx admin-prohibited
+meta skuid 999 ct direction original ip6 daddr @ru6 ct state new reject with icmpx admin-prohibited
 ```
 
 Проверка текущего состояния:
@@ -44,6 +44,46 @@ systemctl is-active update-ru-nftsets.timer
 nft list chain inet geo_vpn output
 systemctl list-timers --all --no-pager | grep update-ru-nftsets
 ```
+
+---
+
+## Важное предупреждение для Xray REALITY VLESS
+
+При включённой блокировке российского сегмента сети **недопустимо** выбирать для `Xray REALITY VLESS` значение `server_name` / `target` / `serverNames` из российского сегмента.
+
+Домен, который резолвится в RU IP и нужен REALITY как `target` не будет работать.
+
+### Почему это ломает работу
+
+REALITY зависит от выбранного `target` и согласованного с ним `server_name`.
+
+Если `server_name` и `target` указывают на ресурс из российского сегмента, то процесс `xray` начинает зависеть от исходящих соединений к RU IP для работы REALITY.
+
+Но при включённом geo-block у `xray` запрещены новые исходящие соединения к RU IP.
+
+В результате:
+
+- клиент доходит до сервера;
+- `xray` пытается работать с REALITY через RU `target`;
+- исходящее соединение к RU адресу попадает под `nftables`-блокировку;
+- VLESS + REALITY перестаёт работать.
+
+### Практический вывод
+
+Если на сервере включён geo-block российского сегмента, то для REALITY нужно выбирать:
+
+- **не российский** `server_name`
+- **не российский** `target`
+- **не российский** `serverNames`
+
+Лучше использовать нейтральный HTTPS-сайт вне российского сегмента, который:
+
+- поддерживает `TLS 1.3`;
+- нормально отвечает на handshake;
+- отдаёт сертификат с нужным доменом в `SAN`;
+- не завязан на CDN-frontend.
+
+После смены `target` на сервере нужно одновременно поменять и клиентский `server_name`.
 
 ---
 
@@ -83,11 +123,11 @@ table inet geo_vpn {
 
         ct state established,related accept
 
-        meta skuid 996 ip daddr @ru4 ct state new reject with icmpx admin-prohibited
-        meta skuid 996 ip6 daddr @ru6 ct state new reject with icmpx admin-prohibited
+        meta skuid 996 ct direction original ip daddr @ru4 ct state new reject with icmpx admin-prohibited
+        meta skuid 996 ct direction original ip6 daddr @ru6 ct state new reject with icmpx admin-prohibited
 
-        meta skuid 999 ip daddr @ru4 ct state new reject with icmpx admin-prohibited
-        meta skuid 999 ip6 daddr @ru6 ct state new reject with icmpx admin-prohibited
+        meta skuid 999 ct direction original ip daddr @ru4 ct state new reject with icmpx admin-prohibited
+        meta skuid 999 ct direction original ip6 daddr @ru6 ct state new reject with icmpx admin-prohibited
     }
 }
 EOF
@@ -243,7 +283,7 @@ nft list tables
 
 ---
 
-## 3) Быстрое выключение фильтров без отката до чистой системы
+## 3) Быстрое выключение фильтров
 
 Этот вариант ничего не удаляет и не меняет на диске. Он только убирает активную таблицу из ядра. После этого фильтры сразу перестают действовать.
 
@@ -263,7 +303,7 @@ nft list tables
 
 ---
 
-## 4) Быстрое включение фильтров после выключения из пункта 3
+## 4) Быстрое включение фильтров
 
 Этот вариант заново загружает сохранённый конфиг в `nftables`.
 
@@ -285,10 +325,10 @@ table inet geo_vpn {
         chain output {
                 type filter hook output priority filter; policy accept;
                 ct state established,related accept
-                meta skuid 996 ip daddr @ru4 ct state new reject with icmpx admin-prohibited
-                meta skuid 996 ip6 daddr @ru6 ct state new reject with icmpx admin-prohibited
-                meta skuid 999 ip daddr @ru4 ct state new reject with icmpx admin-prohibited
-                meta skuid 999 ip6 daddr @ru6 ct state new reject with icmpx admin-prohibited
+                meta skuid 996 ct direction original ip daddr @ru4 ct state new reject with icmpx admin-prohibited
+                meta skuid 996 ct direction original ip6 daddr @ru6 ct state new reject with icmpx admin-prohibited
+                meta skuid 999 ct direction original ip daddr @ru4 ct state new reject with icmpx admin-prohibited
+                meta skuid 999 ct direction original ip6 daddr @ru6 ct state new reject with icmpx admin-prohibited
         }
 }
 ```
