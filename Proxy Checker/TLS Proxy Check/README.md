@@ -73,7 +73,7 @@
 ### Базовый запуск
 
 ```bash
-python PROXY_TLS_CHECK.py \
+python TLS Proxy Check.py \
   --host proxy.example.net \
   --port 1080 \
   --username YOUR_USERNAME \
@@ -84,7 +84,7 @@ python PROXY_TLS_CHECK.py \
 ### Запуск с явным target
 
 ```bash
-python PROXY_TLS_CHECK.py \
+python TLS Proxy Check.py \
   --host proxy.example.net \
   --port 1080 \
   --username YOUR_USERNAME \
