@@ -1,0 +1,202 @@
+:root {
+    --video-link-parser-panel-height: 320px;
+    --video-link-parser-page-offset: 0px;
+}
+
+#video-link-parser-root {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    height: var(--video-link-parser-panel-height);
+    z-index: 2147483647;
+    background: #0c0e12;
+    color: #e6edf3;
+    font: 12px/1.45 Consolas, Monaco, monospace;
+    border-bottom: 1px solid rgba(255,255,255,0.14);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.45);
+    display: flex;
+    flex-direction: column;
+    opacity: 1;
+    overflow: hidden;
+}
+
+#video-link-parser-root * {
+    box-sizing: border-box;
+}
+
+#video-link-parser-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 10px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    background: #171b22;
+    flex: 0 0 auto;
+    cursor: pointer;
+    user-select: none;
+}
+
+#video-link-parser-title {
+    font-weight: 700;
+    color: #9cdcfe;
+    margin-right: 8px;
+    white-space: nowrap;
+}
+
+#video-link-parser-status {
+    color: #a5d6a7;
+    white-space: nowrap;
+}
+
+#video-link-parser-actions {
+    margin-left: auto;
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+#video-link-parser-actions button {
+    appearance: none;
+    border: 1px solid rgba(255,255,255,0.18);
+    background: rgba(255,255,255,0.06);
+    color: #fff;
+    padding: 4px 8px;
+    cursor: pointer;
+    border-radius: 4px;
+    font: inherit;
+}
+
+#video-link-parser-actions button:hover {
+    background: rgba(255,255,255,0.12);
+}
+
+#video-link-parser-body {
+    display: grid;
+    grid-template-columns: minmax(480px, 1.2fr) minmax(320px, 1fr);
+    min-height: 0;
+    height: calc(var(--video-link-parser-panel-height) - 43px);
+    flex: 1 1 auto;
+    overflow: hidden;
+    background: #0c0e12;
+}
+
+.video-link-parser-col {
+    min-width: 0;
+    min-height: 0;
+    overflow: auto;
+    overscroll-behavior: contain;
+    padding-bottom: 10px;
+    background: #0c0e12;
+}
+
+.video-link-parser-col + .video-link-parser-col {
+    border-left: 1px solid rgba(255,255,255,0.08);
+}
+
+.video-link-parser-col-header {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    background: #14181e;
+    padding: 8px 10px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    font-weight: 700;
+}
+
+.video-link-parser-list {
+    padding: 8px 10px 12px;
+}
+
+.video-link-parser-item {
+    padding: 8px;
+    border: 1px solid rgba(255,255,255,0.08);
+    background: #11161c;
+    border-radius: 6px;
+    margin-bottom: 8px;
+    word-break: break-word;
+}
+
+.video-link-parser-item-title {
+    color: #ffd580;
+    margin-bottom: 4px;
+    font-weight: 700;
+}
+
+.video-link-parser-item-meta {
+    color: #8fb3c9;
+    margin-bottom: 6px;
+}
+
+.video-link-parser-item-url {
+    color: #e6edf3;
+    margin-bottom: 6px;
+    white-space: pre-wrap;
+}
+
+.video-link-parser-item-actions {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+.video-link-parser-item-actions a,
+.video-link-parser-item-actions button {
+    appearance: none;
+    border: 1px solid rgba(255,255,255,0.18);
+    background: rgba(255,255,255,0.06);
+    color: #fff;
+    padding: 4px 8px;
+    cursor: pointer;
+    border-radius: 4px;
+    font: inherit;
+    text-decoration: none;
+}
+
+.video-link-parser-log {
+    margin-bottom: 6px;
+    white-space: pre-wrap;
+    color: #c9d1d9;
+}
+
+.video-link-parser-log-time {
+    color: #8fb3c9;
+    margin-right: 6px;
+}
+
+.video-link-parser-group-title {
+    color: #7ee787;
+    font-weight: 700;
+    margin: 10px 0 8px;
+}
+
+#video-link-parser-root.video-link-parser-collapsed {
+    top: 8px;
+    left: 8px;
+    right: auto;
+    width: auto;
+    height: auto;
+    min-width: 0;
+    border: 1px solid rgba(255,255,255,0.16);
+    border-radius: 8px;
+    background: rgba(12, 14, 18, 0.68);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.28);
+    overflow: hidden;
+}
+
+#video-link-parser-root.video-link-parser-collapsed #video-link-parser-header {
+    border-bottom: 0;
+    padding: 8px 12px;
+    background: transparent;
+}
+
+#video-link-parser-root.video-link-parser-collapsed #video-link-parser-title {
+    margin-right: 0;
+}
+
+#video-link-parser-root.video-link-parser-collapsed #video-link-parser-status,
+#video-link-parser-root.video-link-parser-collapsed #video-link-parser-actions,
+#video-link-parser-root.video-link-parser-collapsed #video-link-parser-body {
+    display: none;
+}

@@ -1,0 +1,8 @@
+.IPA,
+.Unicode {
+    font-family: "Noto Sans Samaritan", "Arial Unicode MS", "Lucida Sans Unicode", sans-serif !important;
+}
+
+html, body {
+    font-family: "Noto Sans Samaritan", sans-serif;
+}

@@ -1,0 +1,12 @@
+.description {
+    position: relative !important;
+}
+
+.prod_draw,
+.prod_more {
+    cursor: pointer !important;
+}
+
+.prod_txt {
+    cursor: text !important;
+}
